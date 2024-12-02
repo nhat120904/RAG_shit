@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.idea/ 
+api/chroma_db/
+*.db
+*.sqlite3
+
+*.log
