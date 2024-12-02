@@ -11,10 +11,14 @@ from transformers import pipeline
 from chroma_utils import vectorstore
 # import getpass
 import os
+from dotenv import load_dotenv
+load_dotenv()
 from langchain_google_genai import ChatGoogleGenerativeAI
 
+gg_api = os.environ["GOOGLE_API_KEY"]
+
 if "GOOGLE_API_KEY" not in os.environ:
-    os.environ["GOOGLE_API_KEY"] = "AIzaSyAUHm_aJHG849AQtF_BVvO15lkVtKnRH_Q"
+    print("GG api key not found")
 
 retriever = vectorstore.as_retriever(search_kwargs={"k": 2})
 
@@ -41,8 +45,8 @@ qa_prompt = ChatPromptTemplate.from_messages([
     ("human", "{input}")
 ])
 
-def get_rag_chain(model="gemini-pro"):
-    llm = ChatGoogleGenerativeAI(model="gemini-pro", google_api_key=os.environ["GOOGLE_API_KEY"])
+def get_rag_chain(model="gemini-1.5-flash"):
+    llm = ChatGoogleGenerativeAI(model=model, google_api_key=gg_api)
     result = llm.invoke("Hello how are you?")
     print(result.content)
     history_aware_retriever = create_history_aware_retriever(llm, retriever, contextualize_q_prompt)
